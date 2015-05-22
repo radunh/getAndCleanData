@@ -18,3 +18,25 @@ Instructions
 5. From the data set in step 4, creates a second, independent tidy data set with 
 
 6. the average of each variable for each activity and each subject.
+
+
+What the run_analysis.R file does
+
+require("reshape2") 
+Ensuring the data path exists..."
+download dataset 
+Timestamp the data set archive file with when it wad downloaded
+Extracting the data set files from the archive
+Set the data path of the extracted archive files... 
+Read training & test column files 
+Read the features file and name the columns with it
+Mergethe training and test data set 
+Extract measurements on mean & standard deviation
+merge the data with the Activity Names table
+Set column names, remove ()
+Replace hyphens with underscores 
+Remove columns used only for tidying up the data set
+Melt the data set
+Create the tidy data
+write data 
+
