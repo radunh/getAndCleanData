@@ -15,7 +15,7 @@
 require("reshape2") 
 
 ##This should be standard in all files that pull data
-#"Ensuring the data path exists..."
+#"Ensure the data path exists..."
 dataPath <- "./data" 
 if (!file.exists(dataPath)) { dir.create(dataPath) } 
 
@@ -27,13 +27,13 @@ if (!file.exists(filePath)) {
   download.file(url=fileURL,destfile=filePath,method="curl") 
 } 
 
-#Timestamping the data set archive file with when it wad downloaded
+#Timestamp the data set archive file with when it was downloaded
 fileConn <- file(paste(filePath,".timestamp",sep="")) 
 writeLines(date(), fileConn) 
 close(fileConn) 
 
 
-#Extracting the data set files from the archive
+#Extract the data set files from the archive
 unzip(zipfile=filePath, exdir=dataPath) 
 
 
@@ -41,7 +41,7 @@ unzip(zipfile=filePath, exdir=dataPath)
 dataSetPath <- paste(dataPath,"UCI HAR Dataset",sep="/") 
 
 
-#Reading training & test column files 
+#Read training & test column files 
 xTrain <- read.table(file=paste(dataSetPath,"/train/","X_train.txt",sep=""),header=FALSE) 
 xTest  <- read.table(file=paste(dataSetPath,"/test/","X_test.txt",sep=""),header=FALSE) 
 yTrain <- read.table(file=paste(dataSetPath,"/train/","y_train.txt",sep=""),header=FALSE) 
@@ -50,7 +50,7 @@ sTrain <- read.table(file=paste(dataSetPath,"/train/","subject_train.txt",sep=""
 sTest  <- read.table(file=paste(dataSetPath,"/test/","subject_test.txt",sep=""),header=FALSE) 
 
 
-#Reading the features file and naming the columns with it
+#Read the features file and naming the columns with it
 features <- read.table(file=paste(dataSetPath,"features.txt",sep="/"),header=FALSE) 
 names(xTrain) <- features[,2] 
 names(xTest)  <- features[,2] 
@@ -60,18 +60,18 @@ names(sTest)  <- "SubjectID"
 names(sTrain) <- "SubjectID" 
 
 
-#Merging (appending) the training and test data set 
+#Merge the training and test data set 
 xData <- rbind(xTrain, xTest) 
 yData <- rbind(yTrain, yTest) 
 sData <- rbind(sTrain, sTest) 
 data <- cbind(xData, yData, sData) 
 
 
-#Extracting measurements on mean & standard deviation
+#Extract measurements on mean & standard deviation
 matchingCols <- grep("mean|std|Activity|Subject", names(data)) 
 data <- data[,matchingCols] 
 
-
+#merge the data with the Activity Names table
 activityNames <- read.table(file=paste(dataSetPath,"activity_labels.txt",sep="/"),header=FALSE) 
 names(activityNames) <- c("ActivityID", "Activity_Name") 
 data <- merge(x=data, y=activityNames, by.x="ActivityID", by.y="ActivityID" ) 
@@ -85,11 +85,11 @@ names(data) <- gsub(pattern="[()]", replacement="", names(data))
 names(data) <- gsub(pattern="[-]", replacement="_", names(data)) 
 
 
-#Removing columns used only for tidying up the data set
+#Remove columns used only for tidying up the data set
 data <- data[,!(names(data) %in% c("ActivityID"))] 
 
 
-#Melting the data set
+#Melt the data set
 meltdataset <- melt(data=data, id=c("SubjectID", "Activity_Name")) 
 
 
